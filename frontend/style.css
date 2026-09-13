@@ -50,3 +50,13 @@ button {
     margin-top: 25px;
     text-align: center;
 }
+
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.input-error {
+    border: 1px solid red;
+}

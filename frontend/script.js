@@ -14,6 +14,42 @@ generateBtn.addEventListener("click", function () {
     const amount = amountInput.value.trim();
     const note = noteInput.value.trim();
 
+    // Clear previous errors
+    document.getElementById("upiIdError").textContent = "";
+    document.getElementById("nameError").textContent = "";
+    document.getElementById("amountError").textContent = "";
+
+    upiIdInput.classList.remove("input-error");
+    nameInput.classList.remove("input-error");
+    amountInput.classList.remove("input-error");
+
+    let hasError = false;
+
+    if (upiId === "") {
+        document.getElementById("upiIdError").textContent =
+            "Please enter your UPI ID.";
+        upiIdInput.classList.add("input-error");
+        hasError = true;
+    }
+
+    if (name === "") {
+        document.getElementById("nameError").textContent =
+            "Please enter your name.";
+        nameInput.classList.add("input-error");
+        hasError = true;
+    }
+
+    if (amount === "" || Number(amount) <= 0 || Number(amount) > 100000) {
+        document.getElementById("amountError").textContent =
+            "Amount must be between ₹1 and ₹100,000.";
+        amountInput.classList.add("input-error");
+        hasError = true;
+    }
+
+    if (hasError) {
+        return;
+    }
+
     const upiUrl =
         `upi://pay?pa=${encodeURIComponent(upiId)}` +
         `&pn=${encodeURIComponent(name)}` +
