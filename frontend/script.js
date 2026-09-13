@@ -26,10 +26,25 @@ generateBtn.addEventListener("click", function () {
     let hasError = false;
 
     if (upiId === "") {
+
         document.getElementById("upiIdError").textContent =
             "Please enter your UPI ID.";
+
         upiIdInput.classList.add("input-error");
         hasError = true;
+
+    } else {
+
+        const upiPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+$/;
+
+        if (!upiPattern.test(upiId)) {
+
+            document.getElementById("upiIdError").textContent =
+                "Please enter a valid UPI ID, e.g. name@bank.";
+
+            upiIdInput.classList.add("input-error");
+            hasError = true;
+        }
     }
 
     if (name === "") {
