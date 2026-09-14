@@ -907,3 +907,503 @@ select:focus {
         font-size: 22px;
     }
 }
+
+/* ==========================================
+   RESET / REFRESH BUTTON
+   ========================================== */
+
+.reset-btn {
+    width: 52px;
+    height: 52px;
+
+    border: none;
+    border-radius: 16px;
+
+    background: #fff;
+    color: #14213d;
+
+    font-size: 28px;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 18px rgba(20, 33, 61, 0.10);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+
+    flex-shrink: 0;
+}
+
+
+/* Hover */
+.reset-btn:hover {
+    background: #fff4ea;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 9px 22px rgba(20, 33, 61, 0.14);
+}
+
+
+/* Press */
+.reset-btn:active {
+    transform: scale(0.94);
+
+    box-shadow:
+        0 4px 10px rgba(20, 33, 61, 0.10);
+}
+
+
+/* Refresh rotation when clicked */
+.reset-btn.resetting {
+    animation: resetSpin 0.45s ease;
+}
+
+
+@keyframes resetSpin {
+
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* ==========================================
+   ACCOUNT VIEW / EDIT MODE
+   ========================================== */
+
+.account-info-section {
+    margin-top: 24px;
+    margin-bottom: 28px;
+}
+
+.account-info-label {
+    display: block;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #777;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+
+    margin-bottom: 8px;
+}
+
+
+.account-info-value {
+    min-height: 50px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 16px;
+
+    background: #fff;
+
+    border: 1px solid #eee3da;
+
+    border-radius: 14px;
+
+    color: #14213d;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    box-sizing: border-box;
+}
+
+
+.account-edit-field {
+    width: 100%;
+}
+
+
+.account-edit-field input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   ACCOUNT ACTION BUTTONS
+   ========================================== */
+
+.account-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 28px;
+}
+
+
+.edit-account-btn,
+.save-account-btn {
+    border: none;
+
+    min-width: 100px;
+    height: 46px;
+
+    padding: 0 20px;
+
+    border-radius: 14px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.edit-account-btn {
+    background: #14213d;
+    color: #fff;
+
+    box-shadow:
+        0 6px 16px rgba(20, 33, 61, 0.16);
+}
+
+
+.save-account-btn {
+    background: linear-gradient(135deg,
+            #f4a261,
+            #e76f51);
+
+    color: #fff;
+
+    box-shadow:
+        0 6px 16px rgba(231, 111, 81, 0.20);
+}
+
+
+.edit-account-btn:hover,
+.save-account-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+.edit-account-btn:active,
+.save-account-btn:active {
+    transform: scale(0.96);
+}
+
+
+/* ==========================================
+   EDIT PROFILE ACTIONS
+   ========================================== */
+
+.edit-profile-actions {
+    margin-top: 16px;
+}
+
+
+.edit-profile-actions .secondary-btn {
+    width: 100%;
+}
+
+
+/* ==========================================
+   EDIT MODE PROFILE ITEMS
+   ========================================== */
+
+.profile-item.edit-mode {
+    padding-right: 10px;
+}
+
+
+/* ==========================================
+   HIDDEN
+   ========================================== */
+
+.hidden {
+    display: none !important;
+}
+
+.delete-confirm {
+    background: #e76f51 !important;
+    color: #fff !important;
+}
+
+/* ==========================================
+   CUSTOM UPI PROFILE DROPDOWN
+   ========================================== */
+
+.upi-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+
+/* ------------------------------------------
+   Hide native select
+   ------------------------------------------ */
+
+.upi-native-select {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* ------------------------------------------
+   Main dropdown button
+   ------------------------------------------ */
+
+.upi-dropdown-trigger {
+    width: 100%;
+    min-height: 62px;
+
+    padding: 10px 48px 10px 18px;
+
+    border: 1.5px solid #e3d8cf;
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    color: #14213d;
+
+    font-family: inherit;
+    text-align: left;
+
+    cursor: pointer;
+
+    position: relative;
+
+    box-shadow:
+        0 5px 16px rgba(20, 33, 61, 0.06);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.upi-dropdown-trigger:hover {
+    border-color: #f4a261;
+}
+
+.upi-dropdown-trigger:focus {
+    outline: none;
+
+    border-color: #f4a261;
+
+    box-shadow:
+        0 0 0 4px rgba(244, 162, 97, 0.14),
+        0 6px 18px rgba(20, 33, 61, 0.08);
+}
+
+
+/* ------------------------------------------
+   Selected profile
+   ------------------------------------------ */
+
+.upi-selected-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    overflow: hidden;
+}
+
+.upi-selected-name {
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #14213d;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upi-selected-id {
+    font-size: 13px;
+    font-weight: 400;
+
+    color: #7a726c;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upi-selected-placeholder {
+    font-size: 15px;
+    font-weight: 400;
+
+    color: #8a817a;
+}
+
+
+/* ------------------------------------------
+   Arrow
+   ------------------------------------------ */
+
+.upi-dropdown-arrow {
+    position: absolute;
+
+    right: 18px;
+    top: 50%;
+
+    transform: translateY(-55%);
+
+    font-size: 23px;
+    font-weight: 600;
+
+    color: #14213d;
+
+    transition: transform 0.2s ease;
+
+    pointer-events: none;
+}
+
+.upi-dropdown.open .upi-dropdown-arrow {
+    transform:
+        translateY(-45%) rotate(180deg);
+}
+
+
+/* ------------------------------------------
+   Open dropdown menu
+   ------------------------------------------ */
+
+.upi-dropdown-menu {
+    position: absolute;
+
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+
+    z-index: 100;
+
+    padding: 7px;
+
+    background: #ffffff;
+
+    border: 1px solid #eadfd6;
+    border-radius: 18px;
+
+    box-shadow:
+        0 14px 35px rgba(20, 33, 61, 0.14);
+
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+
+/* ------------------------------------------
+   Individual profile option
+   ------------------------------------------ */
+
+.upi-dropdown-option {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    padding: 12px 13px;
+
+    border: none;
+    border-radius: 13px;
+
+    background: transparent;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.upi-dropdown-option:hover {
+    background: #fff4ea;
+}
+
+.upi-dropdown-option.selected {
+    background: #fff0e3;
+}
+
+
+/* Profile name */
+
+.upi-option-name {
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #14213d;
+}
+
+
+/* UPI ID */
+
+.upi-option-id {
+    font-size: 13px;
+    font-weight: 400;
+
+    color: #7a726c;
+
+    word-break: break-all;
+}
+
+
+/* ------------------------------------------
+   Empty state
+   ------------------------------------------ */
+
+.upi-dropdown-empty {
+    padding: 14px;
+
+    font-size: 14px;
+    color: #8a817a;
+
+    text-align: center;
+}
+
+
+/* ------------------------------------------
+   Scrollbar
+   ------------------------------------------ */
+
+.upi-dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.upi-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.upi-dropdown-menu::-webkit-scrollbar-thumb {
+    background: #d8cdc4;
+    border-radius: 10px;
+}
+
+
+/* Utility */
+
+.upi-dropdown-menu.hidden {
+    display: none;
+}

@@ -16,12 +16,30 @@ const accountSection = document.getElementById("accountSection");
 const generateNav = document.getElementById("generateNav");
 const accountNav = document.getElementById("accountNav");
 
+const upiIdError = document.getElementById("upiIdError");
+const amountError = document.getElementById("amountError");
+const noteError = document.getElementById("noteError");
+
 // Generate form
 const upiIdSelect = document.getElementById("upiId");
+
+// Custom UPI dropdown
+const upiDropdown =
+    document.getElementById("upiDropdown");
+
+const upiDropdownTrigger =
+    document.getElementById("upiDropdownTrigger");
+
+const upiDropdownMenu =
+    document.getElementById("upiDropdownMenu");
+
+const upiSelectedContent =
+    document.getElementById("upiSelectedContent");
+
 const amountInput = document.getElementById("amount");
 const noteInput = document.getElementById("note");
 const generateBtn = document.getElementById("generateBtn");
-const addNewProfileBtn = document.getElementById("addNewProfileBtn");
+const resetBtn = document.getElementById("resetBtn");
 
 // QR / payment card
 const paymentCard = document.getElementById("paymentCard");
@@ -39,14 +57,32 @@ const shareQrBtn = document.getElementById("shareQrBtn");
 
 // Shop/profile section
 const shopNameInput = document.getElementById("shopNameInput");
+
+const shopNameDisplay = document.getElementById("shopNameDisplay");
+
+const shopNameEdit = document.getElementById("shopNameEdit");
+
 const profilesList = document.getElementById("profilesList");
+
 const profileCount = document.querySelector(".profile-count");
+
+const editAccountBtn = document.getElementById("editAccountBtn");
+
+const saveAccountBtn = document.getElementById("saveAccountBtn");
+
+const editProfileActions = document.getElementById("editProfileActions");
 
 const profileForm = document.getElementById("profileForm");
 const profileNameInput = document.getElementById("profileName");
 const profileUpiIdInput = document.getElementById("profileUpiId");
 const saveProfileBtn = document.getElementById("saveProfileBtn");
 const addProfileBtn = document.getElementById("addProfileBtn");
+
+const closeProfileFormBtn = document.getElementById("closeProfileForm");
+const profileLimitError = document.getElementById("profileLimitError");
+
+const profileNameError = document.getElementById("profileNameError");
+const profileUpiIdError = document.getElementById("profileUpiIdError");
 
 
 // ==========================================
@@ -138,47 +174,44 @@ if (accountNav) {
 // ==========================================
 
 function loadShopName() {
-    const savedShopName = localStorage.getItem("shopName");
 
-    if (savedShopName) {
-        if (shopNameInput) {
-            shopNameInput.value = savedShopName;
-        }
+    const savedShopName =
+        localStorage.getItem("shopName");
+
+    const shopName =
+        savedShopName || "My Shop";
+
+
+    if (shopNameInput) {
+        shopNameInput.value =
+            savedShopName || "";
+    }
+
+
+    if (shopNameDisplay) {
+        shopNameDisplay.textContent =
+            shopName;
     }
 }
 
 
 function updateShopNameTitle() {
-    const shopNameTitle = document.getElementById("shopNameTitle");
+
+    const shopNameTitle =
+        document.getElementById("shopNameTitle");
 
     if (!shopNameTitle) {
         return;
     }
 
-    const savedShopName = localStorage.getItem("shopName");
 
-    shopNameTitle.textContent = savedShopName || "My Shop";
+    const savedShopName =
+        localStorage.getItem("shopName");
+
+
+    shopNameTitle.textContent =
+        savedShopName || "My Shop";
 }
-
-
-if (shopNameInput) {
-
-    shopNameInput.addEventListener("input", function () {
-
-        const shopName = shopNameInput.value.trim();
-
-        if (shopName === "") {
-            localStorage.removeItem("shopName");
-        } else {
-            localStorage.setItem("shopName", shopName);
-        }
-
-        updateShopNameTitle();
-
-    });
-
-}
-
 
 // ==========================================
 // UPI PROFILE STORAGE
@@ -230,6 +263,205 @@ function isValidUpiId(upiId) {
     return upiRegex.test(upiId);
 }
 
+// ==========================================
+// CUSTOM UPI DROPDOWN
+// ==========================================
+
+function updateCustomUpiDropdown() {
+    if (
+        !upiIdSelect ||
+        !upiDropdownMenu ||
+        !upiSelectedContent
+    ) {
+        return;
+    }
+
+    const profiles = getProfiles();
+
+    // Clear menu
+    upiDropdownMenu.innerHTML = "";
+
+    // Update selected display
+    const selectedValue = upiIdSelect.value;
+
+    const selectedProfile = profiles.find(function (profile) {
+        return profile.upiId === selectedValue;
+    });
+
+    if (!selectedProfile) {
+        upiSelectedContent.innerHTML = `
+            <span class="upi-selected-placeholder">
+                Select a UPI profile
+            </span>
+        `;
+    } else {
+        upiSelectedContent.innerHTML = `
+            <span class="upi-selected-name">
+                ${escapeHtml(selectedProfile.name)}
+            </span>
+
+            <span class="upi-selected-id">
+                ${escapeHtml(selectedProfile.upiId)}
+            </span>
+        `;
+    }
+
+    // No profiles
+    if (profiles.length === 0) {
+        upiDropdownMenu.innerHTML = `
+            <div class="upi-dropdown-empty">
+                No UPI profiles added yet.
+            </div>
+        `;
+
+        return;
+    }
+
+    // Create profile options
+    profiles.forEach(function (profile) {
+
+        const option =
+            document.createElement("button");
+
+        option.type = "button";
+        option.className = "upi-dropdown-option";
+
+        option.setAttribute("role", "option");
+
+        if (profile.upiId === selectedValue) {
+            option.classList.add("selected");
+            option.setAttribute("aria-selected", "true");
+        }
+
+        option.innerHTML = `
+            <span class="upi-option-name">
+                ${escapeHtml(profile.name)}
+            </span>
+
+            <span class="upi-option-id">
+                ${escapeHtml(profile.upiId)}
+            </span>
+        `;
+
+        option.addEventListener(
+            "click",
+            function () {
+
+                // Update hidden native select
+                upiIdSelect.value = profile.upiId;
+
+                // Notify any existing select listeners
+                upiIdSelect.dispatchEvent(
+                    new Event("change", {
+                        bubbles: true
+                    })
+                );
+
+                // Update visible dropdown
+                updateCustomUpiDropdown();
+
+                closeUpiDropdown();
+            }
+        );
+
+        upiDropdownMenu.appendChild(option);
+    });
+}
+
+
+function openUpiDropdown() {
+
+    if (
+        !upiDropdown ||
+        !upiDropdownMenu ||
+        !upiDropdownTrigger
+    ) {
+        return;
+    }
+
+    updateCustomUpiDropdown();
+
+    upiDropdown.classList.add("open");
+
+    upiDropdownMenu.classList.remove("hidden");
+
+    upiDropdownTrigger.setAttribute(
+        "aria-expanded",
+        "true"
+    );
+}
+
+
+function closeUpiDropdown() {
+
+    if (
+        !upiDropdown ||
+        !upiDropdownMenu ||
+        !upiDropdownTrigger
+    ) {
+        return;
+    }
+
+    upiDropdown.classList.remove("open");
+
+    upiDropdownMenu.classList.add("hidden");
+
+    upiDropdownTrigger.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+}
+
+
+function toggleUpiDropdown() {
+
+    if (
+        upiDropdownMenu &&
+        !upiDropdownMenu.classList.contains("hidden")
+    ) {
+        closeUpiDropdown();
+    } else {
+        openUpiDropdown();
+    }
+}
+
+if (upiDropdownTrigger) {
+    upiDropdownTrigger.addEventListener(
+        "click",
+        function () {
+            toggleUpiDropdown();
+        }
+    );
+}
+
+
+// Close when clicking outside
+document.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            upiDropdown &&
+            !upiDropdown.contains(event.target)
+        ) {
+            closeUpiDropdown();
+        }
+
+    }
+);
+
+
+// Close with Escape
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+            closeUpiDropdown();
+        }
+
+    }
+);
 
 // ==========================================
 // PROFILE DROPDOWN
@@ -264,6 +496,7 @@ function updateProfileDropdown() {
 
         option.textContent =
             `${profile.name} — ${profile.upiId}`;
+        updateCustomUpiDropdown();
 
         upiIdSelect.appendChild(option);
 
@@ -329,7 +562,13 @@ function renderProfiles() {
         profileElement.className = "profile-item";
 
 
-        profileElement.innerHTML = `
+        if (accountEditMode) {
+
+    profileElement.classList.add(
+        "edit-mode"
+    );
+
+    profileElement.innerHTML = `
             <div class="profile-info">
 
                 <strong>
@@ -350,6 +589,24 @@ function renderProfiles() {
                 Delete
             </button>
         `;
+
+    } else {
+
+        profileElement.innerHTML = `
+            <div class="profile-info">
+
+                <strong>
+                    ${escapeHtml(profile.name)}
+                </strong>
+
+                <span>
+                    ${escapeHtml(profile.upiId)}
+                </span>
+
+            </div>
+        `;
+
+    }
 
 
         profilesList.appendChild(profileElement);
@@ -393,18 +650,46 @@ function deleteProfile(index) {
     }
 
 
-    const profile = profiles[index];
+    const profileElement =
+        profilesList
+            ? profilesList.children[index]
+            : null;
 
-    const confirmed = confirm(
-        `Delete the profile "${profile.name}"?`
-    );
 
-
-    if (!confirmed) {
+    if (!profileElement) {
         return;
     }
 
 
+    const deleteButton =
+        profileElement.querySelector(
+            ".delete-profile-btn"
+        );
+
+
+    if (!deleteButton) {
+        return;
+    }
+
+
+    // First click
+    if (deleteButton.dataset.confirming !== "true") {
+
+        deleteButton.dataset.confirming =
+            "true";
+
+        deleteButton.textContent =
+            "Confirm delete";
+
+        deleteButton.classList.add(
+            "delete-confirm"
+        );
+
+        return;
+    }
+
+
+    // Second click = actually delete
     profiles.splice(index, 1);
 
     saveProfiles(profiles);
@@ -453,26 +738,263 @@ function closeProfileForm() {
 
 }
 
+if (closeProfileFormBtn) {
 
-if (addProfileBtn) {
-
-    addProfileBtn.addEventListener(
+    closeProfileFormBtn.addEventListener(
         "click",
-        openProfileForm
+        function () {
+
+            closeProfileForm();
+
+        }
+    );
+
+}
+
+// ==========================================
+// ACCOUNT EDIT MODE
+// ==========================================
+
+let accountEditMode = false;
+
+
+function enterAccountEditMode() {
+
+    accountEditMode = true;
+
+
+    // Show shop name input
+    if (shopNameDisplay) {
+        shopNameDisplay.classList.add("hidden");
+    }
+
+    if (shopNameEdit) {
+        shopNameEdit.classList.remove("hidden");
+    }
+
+
+    // Show edit controls
+    if (editProfileActions) {
+        editProfileActions.classList.remove(
+            "hidden"
+        );
+    }
+
+
+    // Switch buttons
+    if (editAccountBtn) {
+        editAccountBtn.classList.add("hidden");
+    }
+
+    if (saveAccountBtn) {
+        saveAccountBtn.classList.remove("hidden");
+    }
+
+
+    // Put current name in input
+    const currentShopName =
+        localStorage.getItem("shopName")
+        || "";
+
+    if (shopNameInput) {
+        shopNameInput.value =
+            currentShopName;
+
+        shopNameInput.focus();
+    }
+
+
+    renderProfiles();
+
+}
+
+
+function exitAccountEditMode() {
+
+    accountEditMode = false;
+
+
+    // Show shop name
+    if (shopNameDisplay) {
+        shopNameDisplay.classList.remove(
+            "hidden"
+        );
+    }
+
+    if (shopNameEdit) {
+        shopNameEdit.classList.add("hidden");
+    }
+
+
+    // Hide edit controls
+    if (editProfileActions) {
+        editProfileActions.classList.add(
+            "hidden"
+        );
+    }
+
+
+    // Switch buttons
+    if (editAccountBtn) {
+        editAccountBtn.classList.remove(
+            "hidden"
+        );
+    }
+
+    if (saveAccountBtn) {
+        saveAccountBtn.classList.add("hidden");
+    }
+
+
+    // Close profile form if open
+    closeProfileForm();
+
+
+    // Reload displayed information
+    loadShopName();
+
+    renderProfiles();
+
+}
+
+
+if (editAccountBtn) {
+
+    editAccountBtn.addEventListener(
+        "click",
+        function () {
+
+            enterAccountEditMode();
+
+        }
     );
 
 }
 
 
-if (addNewProfileBtn) {
+if (saveAccountBtn) {
 
-    addNewProfileBtn.addEventListener(
+    saveAccountBtn.addEventListener(
         "click",
         function () {
 
-            showAccountSection();
+            const shopName =
+                shopNameInput
+                    ? shopNameInput.value.trim()
+                    : "";
+
+
+            if (shopName === "") {
+
+                localStorage.removeItem(
+                    "shopName"
+                );
+
+            } else {
+
+                localStorage.setItem(
+                    "shopName",
+                    shopName
+                );
+
+            }
+
+
+            updateShopNameTitle();
+
+            exitAccountEditMode();
+
+        }
+    );
+
+}
+
+if (addProfileBtn) {
+
+    addProfileBtn.addEventListener(
+        "click",
+        function () {
+
+            const profiles = getProfiles();
+
+            if (profiles.length >= 5) {
+
+                if (profileLimitError) {
+                    profileLimitError.textContent =
+                        "You already have 5 UPI IDs added.";
+                }
+
+                return;
+            }
+
+            if (profileLimitError) {
+                profileLimitError.textContent = "";
+            }
 
             openProfileForm();
+
+        }
+    );
+
+}
+
+
+
+// ==========================================
+// RESET / REFRESH FORM
+// ==========================================
+
+if (resetBtn) {
+
+    resetBtn.addEventListener(
+        "click",
+        function () {
+            // Refresh animation
+            resetBtn.classList.remove("resetting");
+
+            void resetBtn.offsetWidth;
+
+            resetBtn.classList.add("resetting");
+
+            // Clear form fields
+            if (upiIdSelect) {
+                upiIdSelect.value = "";
+                updateCustomUpiDropdown();
+                closeUpiDropdown();
+            }
+
+            if (amountInput) {
+                amountInput.value = "";
+            }
+
+            if (noteInput) {
+                noteInput.value = "";
+            }
+
+
+            // Remove generated QR
+            if (qrContainer) {
+                qrContainer.innerHTML = "";
+            }
+
+
+            // Hide payment card
+            if (paymentCard) {
+                paymentCard.classList.add("hidden");
+            }
+
+
+            // Hide Download / Share buttons
+            if (qrActions) {
+                qrActions.classList.add("hidden");
+            }
+
+
+            // Return to top of Generate page
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
         }
     );
@@ -501,22 +1023,62 @@ if (saveProfileBtn) {
                     : "";
 
 
-            // Validate name
+            // Clear old errors
+            if (profileNameError) {
+                profileNameError.textContent = "";
+            }
+
+            if (profileUpiIdError) {
+                profileUpiIdError.textContent = "";
+            }
+
+            if (profileLimitError) {
+                profileLimitError.textContent = "";
+            }
+
+
+            // Validate profile name
             if (name === "") {
 
-                alert("Please enter a profile name.");
+                if (profileNameError) {
+                    profileNameError.textContent =
+                        "Profile name cannot be empty.";
+                }
+
+                if (profileNameInput) {
+                    profileNameInput.focus();
+                }
 
                 return;
             }
 
 
             // Validate UPI ID
+            if (upiId === "") {
+
+                if (profileUpiIdError) {
+                    profileUpiIdError.textContent =
+                        "UPI ID cannot be empty.";
+                }
+
+                if (profileUpiIdInput) {
+                    profileUpiIdInput.focus();
+                }
+
+                return;
+            }
+
+
             if (!isValidUpiId(upiId)) {
 
-                alert(
-                    "Please enter a valid UPI ID.\n\n" +
-                    "Example: yourname@upi"
-                );
+                if (profileUpiIdError) {
+                    profileUpiIdError.textContent =
+                        "Enter a valid UPI ID, e.g. name@upi";
+                }
+
+                if (profileUpiIdInput) {
+                    profileUpiIdInput.focus();
+                }
 
                 return;
             }
@@ -528,15 +1090,16 @@ if (saveProfileBtn) {
             // Maximum 5 profiles
             if (profiles.length >= 5) {
 
-                alert(
-                    "You can add a maximum of 5 UPI profiles."
-                );
+                if (profileLimitError) {
+                    profileLimitError.textContent =
+                        "You already have 5 UPI IDs added.";
+                }
 
                 return;
             }
 
 
-            // Check duplicate UPI ID
+            // Duplicate UPI ID
             const alreadyExists =
                 profiles.some(function (profile) {
 
@@ -548,9 +1111,14 @@ if (saveProfileBtn) {
 
             if (alreadyExists) {
 
-                alert(
-                    "This UPI ID is already added."
-                );
+                if (profileUpiIdError) {
+                    profileUpiIdError.textContent =
+                        "This UPI ID is already added.";
+                }
+
+                if (profileUpiIdInput) {
+                    profileUpiIdInput.focus();
+                }
 
                 return;
             }
@@ -572,7 +1140,10 @@ if (saveProfileBtn) {
             closeProfileForm();
 
 
-            alert("UPI profile added successfully.");
+            // Clear limit message
+            if (profileLimitError) {
+                profileLimitError.textContent = "";
+            }
 
         }
     );
@@ -630,6 +1201,19 @@ function generateQRCode() {
         noteInput
             ? noteInput.value.trim()
             : "";
+    
+    // Clear previous errors
+    if (upiIdError) {
+        upiIdError.textContent = "";
+    }
+
+    if (amountError) {
+        amountError.textContent = "";
+    }
+
+    if (noteError) {
+        noteError.textContent = "";
+    }
 
 
     // ======================================
@@ -638,9 +1222,14 @@ function generateQRCode() {
 
     if (upiId === "") {
 
-        alert(
-            "Please select a UPI profile."
-        );
+        if (upiIdError) {
+            upiIdError.textContent =
+                "Please select a UPI profile.";
+        }
+
+        if (upiIdSelect) {
+            upiIdSelect.focus();
+        }
 
         return;
     }
@@ -648,9 +1237,14 @@ function generateQRCode() {
 
     if (!isValidUpiId(upiId)) {
 
-        alert(
-            "Please select a valid UPI profile."
-        );
+        if (upiIdError) {
+            upiIdError.textContent =
+                "Please select a valid UPI profile.";
+        }
+
+        if (upiIdSelect) {
+            upiIdSelect.focus();
+        }
 
         return;
     }
@@ -671,9 +1265,14 @@ function generateQRCode() {
             numericAmount <= 0
         ) {
 
-            alert(
-                "Amount must be greater than ₹0."
-            );
+            if (amountError) {
+                amountError.textContent =
+                    "Amount must be greater than ₹0.";
+            }
+
+            if (amountInput) {
+                amountInput.focus();
+            }
 
             return;
         }
@@ -681,9 +1280,14 @@ function generateQRCode() {
 
         if (numericAmount > 100000) {
 
-            alert(
-                "Maximum allowed amount is ₹1,00,000."
-            );
+            if (amountError) {
+                amountError.textContent =
+                    "Amount cannot be more than ₹1,00,000.";
+            }
+
+            if (amountInput) {
+                amountInput.focus();
+            }
 
             return;
         }
@@ -1532,3 +2136,67 @@ showGenerateSection();
 console.log(
     "UPI Payment Manager initialized successfully."
 );
+
+
+if (profileNameInput) {
+
+    profileNameInput.addEventListener(
+        "input",
+        function () {
+
+            if (profileNameError) {
+                profileNameError.textContent = "";
+            }
+
+        }
+    );
+
+}
+
+
+if (profileUpiIdInput) {
+
+    profileUpiIdInput.addEventListener(
+        "input",
+        function () {
+
+            if (profileUpiIdError) {
+                profileUpiIdError.textContent = "";
+            }
+
+        }
+    );
+
+}
+
+
+if (upiIdSelect) {
+
+    upiIdSelect.addEventListener(
+        "change",
+        function () {
+
+            if (upiIdError) {
+                upiIdError.textContent = "";
+            }
+
+        }
+    );
+
+}
+
+
+if (amountInput) {
+
+    amountInput.addEventListener(
+        "input",
+        function () {
+
+            if (amountError) {
+                amountError.textContent = "";
+            }
+
+        }
+    );
+
+}

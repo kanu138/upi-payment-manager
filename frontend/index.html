@@ -40,15 +40,36 @@
                 <div class="form-group">
                     <div class="label-row">
                         <label for="upiId">UPI Profile</label>
-                        <button type="button" class="add-new-btn" id="addNewProfileBtn">
-                            <span>+</span> Add New
+                        <button id="resetBtn" class="reset-btn" type="button">
+                            ↻
                         </button>
                     </div>
 
-                    <select id="upiId">
-                        <option value="">Select a UPI profile</option>
-                    </select>
-
+                    <div class="upi-dropdown" id="upiDropdown">
+                    
+                        <!-- Hidden native select -->
+                        <select id="upiId" class="upi-native-select" aria-hidden="true">
+                            <option value="">
+                                Select a UPI profile
+                            </option>
+                        </select>
+                    
+                        <!-- Visible custom dropdown -->
+                        <button type="button" class="upi-dropdown-trigger" id="upiDropdownTrigger" aria-haspopup="listbox"
+                            aria-expanded="false">
+                            <span id="upiSelectedContent" class="upi-selected-content">
+                                <span class="upi-selected-placeholder">
+                                    Select a UPI profile
+                                </span>
+                            </span>
+                    
+                            <span class="upi-dropdown-arrow">⌄</span>
+                        </button>
+                    
+                        <div class="upi-dropdown-menu hidden" id="upiDropdownMenu" role="listbox"></div>
+                    
+                    </div>
+                    
                     <div class="error" id="upiIdError"></div>
                 </div>
 
@@ -168,17 +189,37 @@
                     <div class="account-avatar">◎</div>
                 </div>
 
-                <div class="form-group">
-                    <label for="shopNameInput">Shop / Firm Name</label>
-                    <input type="text" id="shopNameInput" placeholder="Enter shop or firm name">
+                <!-- Shop -->
+                <div class="account-info-section">
+                
+                    <span class="account-info-label">
+                        Shop / Firm Name
+                    </span>
+                
+                    <div id="shopNameDisplay" class="account-info-value">
+                        My Shop
+                    </div>
+                
+                    <div id="shopNameEdit" class="account-edit-field hidden">
+                        <input type="text" id="shopNameInput" placeholder="Enter shop or firm name">
+                    </div>
+                
                 </div>
 
                 <div class="profiles-header">
+                
                     <div>
                         <h3>UPI Profiles</h3>
-                        <p>Save up to 5 UPI profiles.</p>
+                
+                        <p>
+                            Your saved payment profiles.
+                        </p>
                     </div>
-                    <span class="profile-count">0 / 5</span>
+                
+                    <span class="profile-count">
+                        0 / 5
+                    </span>
+                
                 </div>
 
                 <div id="profilesList" class="profiles-list"></div>
@@ -206,9 +247,26 @@
                     </button>
                 </div>
 
-                <button id="addProfileBtn" class="secondary-btn" type="button">
-                    + Add UPI Profile
-                </button>
+                <div class="account-actions">
+                
+                    <button id="editAccountBtn" class="edit-account-btn" type="button">
+                        ✎ Edit
+                    </button>
+                
+                    <button id="saveAccountBtn" class="save-account-btn hidden" type="button">
+                        ✓ Save
+                    </button>
+                
+                </div>
+
+                <div id="editProfileActions" class="edit-profile-actions hidden">
+                
+                    <button id="addProfileBtn" class="secondary-btn" type="button">
+                        + Add UPI Profile
+                    </button>
+                    <div id="profileLimitError" class="error"></div>
+                
+                </div>
             </div>
         </main>
     </div>
