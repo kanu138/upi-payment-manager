@@ -1197,6 +1197,10 @@ select:focus {
         box-shadow 0.2s ease;
 }
 
+.upi-dropdown-arrow {
+    pointer-events: none;
+}
+
 .upi-dropdown-trigger:hover {
     border-color: #f4a261;
 }
