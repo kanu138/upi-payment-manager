@@ -4,38 +4,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>UPI QR Generator</title>
-
+    <title>UPI Payment Manager</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="container">
+    <div class="bg-shape shape-one"></div>
+    <div class="bg-shape shape-two"></div>
+    <div class="bg-shape shape-three"></div>
 
-        <h1>UPI QR Generator</h1>
+    <div class="app">
 
-        <label for="upiId">UPI ID</label>
-        <input type="text" id="upiId" placeholder="example@upi">
-        <div class="error" id="upiIdError"></div>
+        <header class="header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
 
-        <label for="name">Name</label>
-        <input type="text" id="name" placeholder="Your Name">
-        <div class="error" id="nameError"></div>
+                <div>
+                    <h1 id="shopNameTitle">My Shop</h1>
+                    <p>Select a profile, set an amount, and generate a QR code instantly.</p>
+                </div>
+            </div>
+        </header>
 
-        <label for="amount">Amount</label>
-        <input type="number" id="amount" placeholder="Enter amount">
-        <div class="error" id="amountError"></div>
+        <!-- Generate Screen -->
+        <main id="generateSection">
 
-        <label for="note">Note</label>
-        <input type="text" id="note" placeholder="Payment note">
-        <div class="error" id="noteError"></div>
+            <div class="payment-card">
 
-        <button id="generateBtn">Generate QR</button>
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="upiId">UPI Profile</label>
+                        <button type="button" class="add-new-btn" id="addNewProfileBtn">
+                            <span>+</span> Add New
+                        </button>
+                    </div>
 
-        <div id="qrcode"></div>
+                    <select id="upiId">
+                        <option value="">Select a UPI profile</option>
+                    </select>
+
+                    <div class="error" id="upiIdError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">
+                        Amount <span class="optional">(Optional)</span>
+                    </label>
+
+                    <div class="amount-input">
+                        <span class="rupee">₹</span>
+                        <input type="number" id="amount" placeholder="0.00" min="1" max="100000">
+                    </div>
+
+                    <p class="helper-text">
+                        Leave blank so the customer can enter any amount. Max: ₹1,00,000
+                    </p>
+
+                    <div class="error" id="amountError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="note">
+                        Note <span class="optional">(Optional)</span>
+                    </label>
+
+                    <div class="note-input">
+                        <span class="note-icon">▱</span>
+                        <input type="text" id="note" placeholder="e.g. Invoice #1024, Table 5">
+                    </div>
+
+                    <div class="error" id="noteError"></div>
+                </div>
+
+                <button id="generateBtn" class="generate-btn" type="button">
+                    <span class="button-qr-icon">▦</span>
+                    Generate QR
+                </button>
+            </div>
+
+            <!-- QR Preview -->
+            <section class="qr-section">
+
+                <div id="paymentCard" class="payment-card-preview hidden">
+
+                    <div class="payment-card-header">
+                        <div>
+                            <p class="payment-label">PAYMENT REQUEST</p>
+                            <h2 id="cardShopName">My Shop</h2>
+                        </div>
+                        <div class="upi-badge">UPI</div>
+                    </div>
+
+                    <div class="scan-text">Scan to Pay</div>
+
+                    <div id="qrcode" class="qr-container"></div>
+
+                    <div class="payment-info">
+                        <div id="cardAmountRow" class="amount-row">
+                            <span class="amount-label">Amount</span>
+                            <strong id="cardAmount">Pay any amount</strong>
+                        </div>
+
+                        <div id="cardNoteRow" class="info-row">
+                            <span>Note</span>
+                            <strong id="cardNote">No note</strong>
+                        </div>
+
+                        <div class="info-row">
+                            <span>UPI ID</span>
+                            <strong id="cardUpiId">-</strong>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        Scan with any supported UPI app
+                    </div>
+                </div>
+
+                <div id="qrActions" class="qr-actions hidden">
+                    <button id="downloadQrBtn" class="action-btn" type="button">
+                        ↓ &nbsp; Download QR
+                    </button>
+                    <button id="shareQrBtn" class="action-btn" type="button">
+                        ↗ &nbsp; Share
+                    </button>
+                </div>
+
+                <div class="supported-section">
+                    <p class="supported-title">SUPPORTED PAYMENT APPS</p>
+                    <div class="payment-apps">
+                        <span>Google Pay</span>
+                        <span>PhonePe</span>
+                        <span>Paytm</span>
+                        <span>BHIM</span>
+                        <span>Amazon Pay</span>
+                    </div>
+                </div>
+
+                <div class="trust-message">
+                    <span class="shield">✓</span>
+                    <span>Secure&nbsp; • &nbsp;Fast&nbsp; • &nbsp;Trusted</span>
+                </div>
+
+            </section>
+        </main>
+
+        <!-- My Account Screen -->
+        <main id="accountSection" class="hidden">
+
+            <div class="account-card">
+
+                <div class="account-header">
+                    <div>
+                        <h2>My Account</h2>
+                        <p>Manage your shop and UPI profiles.</p>
+                    </div>
+                    <div class="account-avatar">◎</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="shopNameInput">Shop / Firm Name</label>
+                    <input type="text" id="shopNameInput" placeholder="Enter shop or firm name">
+                </div>
+
+                <div class="profiles-header">
+                    <div>
+                        <h3>UPI Profiles</h3>
+                        <p>Save up to 5 UPI profiles.</p>
+                    </div>
+                    <span class="profile-count">0 / 5</span>
+                </div>
+
+                <div id="profilesList" class="profiles-list"></div>
+
+                <div id="profileForm" class="profile-form hidden">
+                    <div class="profile-form-header">
+                        <h3>Add UPI Profile</h3>
+                        <button type="button" id="closeProfileForm" class="close-btn">×</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileName">Profile Name</label>
+                        <input type="text" id="profileName" placeholder="e.g. Personal, Shop, Business">
+                        <div id="profileNameError" class="error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profileUpiId">UPI ID</label>
+                        <input type="text" id="profileUpiId" placeholder="example@upi">
+                        <div id="profileUpiIdError" class="error"></div>
+                    </div>
+
+                    <button type="button" id="saveProfileBtn" class="generate-btn">
+                        Save Profile
+                    </button>
+                </div>
+
+                <button id="addProfileBtn" class="secondary-btn" type="button">
+                    + Add UPI Profile
+                </button>
+            </div>
+        </main>
     </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button id="generateNav" class="nav-item active" type="button">
+            <span class="nav-icon qr-nav-icon">▦</span>
+            <span>Generate</span>
+        </button>
+
+        <button id="accountNav" class="nav-item" type="button">
+            <span class="nav-icon account-nav-icon">◎</span>
+            <span>My Account</span>
+        </button>
+    </nav>
 
     <script src="qrcode.min.js"></script>
     <script src="script.js"></script>
